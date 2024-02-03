@@ -10,12 +10,18 @@ function list() {
 }
 
 // list all of the info for a given date
-function listByDate(reservationDate) {
+function listByDate(reservation_date) {
   return knex("reservations")
     .select("*")
-    .where({ reservation_date: reservationDate })
+    .where({ reservation_date })
     .whereNotIn("status", ["finished", "cancelled"])
     .orderBy("reservation_time");
+}
+
+// get a single reservation given reservation id
+
+function read(reservation_id) {
+  return knex("reservations").select("*").where({ reservation_id }).first();
 }
 
 // search reservations by mobile_number
@@ -32,5 +38,6 @@ function search(mobile_number) {
 module.exports = {
   list,
   listByDate,
+  read,
   search,
 };

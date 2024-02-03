@@ -62,7 +62,7 @@ async function list(req, res, next) {
     } else if (mobile_number) {
       const data = await service.search(mobile_number);
       res.json({ data });
-      // list by today's date
+      // TODO: list by today's date? or list all?
     } else {
       const data = await service.list();
       res.json({ data });
@@ -76,6 +76,12 @@ async function list(req, res, next) {
  * Read a reservation given reservation_id
  */
 
+function read(req, res, next) {
+  const { reservation } = res.locals;
+  res.json({ data: reservation });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
+  read: [asyncErrorBoundary(reservationExists), read],
 };
