@@ -62,24 +62,38 @@ const hasRequiredProperties = hasProperties(
 );
 
 // check if people property is number and is greater than 0
-function isPeopleValid(req, res, next) {
+function hasValidPeople(req, res, next) {
   const { people } = req.body.data;
   if (!Number.isInteger(people)) {
     next({
       status: 400,
-      message: "People must be a number.",
+      message: `The people field must be a number.`,
     });
   }
 
   if (people < 1) {
     next({
       status: 400,
-      message: "People must be greater than 0.",
+      message: `The people field must be greater than 0.`,
     });
   }
 
   next();
 }
+
+// check if reservation_date property
+function hasValidReservationDate(req, res, next) {
+  const { reservation_date } = req.body.data;
+
+  const formatDate =
+    /^(3[01]|[12][0-9]|0?[1-9])(\/|-)(1[0-2]|0?[1-9])\2([0-9]{2})?[0-9]{2}$/;
+
+  // console.log(reservation_date.match(formatDate));
+
+  next();
+}
+
+function hasValidReservationTime(req, res, next) {}
 
 /* function todaysDate() {
   const date = new Date();
@@ -148,7 +162,8 @@ module.exports = {
   create: [
     hasRequiredProperties,
     hasOnlyValidProperties,
-    isPeopleValid,
+    hasValidPeople,
+    hasValidReservationDate,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
