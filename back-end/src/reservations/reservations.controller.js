@@ -62,7 +62,7 @@ const hasRequiredProperties = hasProperties(
 );
 
 // check if people property is number and is greater than 0
-function isValidPeople(req, res, next) {
+function isPeopleValid(req, res, next) {
   const { people } = req.body.data;
   if (!Number.isInteger(people)) {
     next({
@@ -148,7 +148,7 @@ module.exports = {
   create: [
     hasRequiredProperties,
     hasOnlyValidProperties,
-    isValidPeople,
+    isPeopleValid,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
