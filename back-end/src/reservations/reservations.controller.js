@@ -61,7 +61,7 @@ const hasRequiredProperties = hasProperties(
   "people"
 );
 
-// check if people property is number and is greater than 0
+// check if inputted people is number and is greater than 0
 function hasValidPeople(req, res, next) {
   const { people } = req.body.data;
   if (!Number.isInteger(people)) {
@@ -81,19 +81,61 @@ function hasValidPeople(req, res, next) {
   next();
 }
 
-// check if reservation_date property
+// check if inputted reservation_date matches given format
 function hasValidReservationDate(req, res, next) {
   const { reservation_date } = req.body.data;
 
-  const formatDate =
-    /^(3[01]|[12][0-9]|0?[1-9])(\/|-)(1[0-2]|0?[1-9])\2([0-9]{2})?[0-9]{2}$/;
+  /* const regex2 =
+    /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/; */
 
-  // console.log(reservation_date.match(formatDate));
+  const dateFormatRegex =
+    /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+
+  // check format of date, should be YYYY-MM-DD
+  if (!dateFormatRegex.test(reservation_date)) {
+    next({
+      status: 400,
+      message: `The reservation_date of ${reservation_date} is not a valid date.`,
+    });
+  }
+
+  // check if date is on a Tuesday, restaurant is closed on Tuesdays
+  const [year, month, day] = reservation_date.split("-");
+  const date = new Date(`${month}, ${day}, ${year}`);
+  const dayOfTheWeek = date.getDay();
+
+  if (dayOfTheWeek === 2) {
+    next({
+      status: 400,
+      message: "The restaurant is closed on Tuesdays.",
+    });
+  }
+
+  // check if date is in the past, only future reservations allowed
 
   next();
 }
 
-function hasValidReservationTime(req, res, next) {}
+function hasValidReservationTime(req, res, next) {
+  const { reservation_time } = req.body.data;
+
+  // check format of time, should be HH:MM
+  const timeFormatRegex = /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/;
+
+  if (!timeFormatRegex.test(reservation_time)) {
+    next({
+      status: 400,
+      message: `The reservation_time of ${reservation_time} is not a valid time.`,
+    });
+  }
+
+  // check if reservation time is between 10:30 AM and 9:30 PM
+
+  // check if reservation time is in the past, only future reservations are allowed
+  // e.g., if it is noon, only allow reservations starting after noon today
+
+  next();
+}
 
 /* function todaysDate() {
   const date = new Date();
@@ -164,6 +206,7 @@ module.exports = {
     hasOnlyValidProperties,
     hasValidPeople,
     hasValidReservationDate,
+    hasValidReservationTime,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
