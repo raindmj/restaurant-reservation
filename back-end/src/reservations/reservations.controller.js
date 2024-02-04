@@ -20,6 +20,47 @@ async function reservationExists(req, res, next) {
   }
 }
 
+// define the valid properties of reservations in an array
+const VALID_PROPERTIES = [
+  "reservation_id",
+  "first_name",
+  "last_name",
+  "mobile_number",
+  "reservation_date",
+  "reservation_time",
+  "people",
+  "status",
+  "created_at",
+  "updated_at",
+];
+
+// checks whether the request body contains a specified set of allowed fields from the given valid properties array
+function hasOnlyValidProperties(req, res, next) {
+  const { data = {} } = req.body;
+
+  const invalidFields = Object.keys(data).filter(
+    (field) => !VALID_PROPERTIES.includes(field)
+  );
+
+  if (invalidFields.length) {
+    return next({
+      status: 400,
+      message: `Invalid field(s): ${invalidFields.join(", ")}`,
+    });
+  }
+  next();
+}
+
+// checks whether or not the request body includes required fields
+const hasRequiredProperties = hasProperties(
+  "first_name",
+  "last_name",
+  "mobile_number",
+  "reservation_date",
+  "reservation_time",
+  "people"
+);
+
 /* function asDateString(date) {
   return `${date.getFullYear().toString(10)}-${(date.getMonth() + 1)
     .toString(10)
@@ -73,6 +114,19 @@ async function list(req, res, next) {
 }
 
 /*
+ * Create a new reservation
+ */
+
+async function create(req, res, next) {
+  try {
+    const data = await service.create(req.body.data);
+    res.status(201).json({ data });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/*
  * Read a reservation given reservation_id
  */
 
@@ -83,5 +137,10 @@ function read(req, res, next) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
+  create: [
+    hasOnlyValidProperties,
+    hasRequiredProperties,
+    asyncErrorBoundary(create),
+  ],
   read: [asyncErrorBoundary(reservationExists), read],
 };

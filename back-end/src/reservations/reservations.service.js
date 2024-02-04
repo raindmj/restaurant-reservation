@@ -1,6 +1,6 @@
 const knex = require("../db/connection");
 
-// list all of the information from reservations table
+// list all of the information from reservations table where the status is not "finished" or "cancelled" and order by reservation time
 // reservation_id, created_at, updated_at, first_name, last_name, mobile_number, reservation_date, reservation_time, people, status
 function list() {
   return knex("reservations")
@@ -18,8 +18,15 @@ function listByDate(reservation_date) {
     .orderBy("reservation_time");
 }
 
-// get a single reservation given reservation id
+// create a new reservation
+function create(reservation) {
+  return knex("reservations")
+    .insert(reservation)
+    .returning("*")
+    .then((createdReservations) => createdReservations[0]);
+}
 
+// get a single reservation given reservation id
 function read(reservation_id) {
   return knex("reservations").select("*").where({ reservation_id }).first();
 }
@@ -38,6 +45,7 @@ function search(mobile_number) {
 module.exports = {
   list,
   listByDate,
+  create,
   read,
   search,
 };
