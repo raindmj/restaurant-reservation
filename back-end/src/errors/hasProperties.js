@@ -4,26 +4,34 @@ function hasProperties(...properties) {
 
     try {
       let invalidFields = [];
+
       properties.forEach((property) => {
+        console.log(data[property]);
         if (!data[property]) {
           invalidFields.push(property);
         }
       });
 
+      if (data["people"] === 0) {
+        next();
+      }
+
       if (invalidFields.length > 1) {
-        const error = new Error(
-          `The following properties are required: ${invalidFields.join(", ")}`
-        );
-        error.status = 400;
-        throw error;
+        next({
+          status: 400,
+          message: `The following properties are required: ${invalidFields.join(
+            ", "
+          )}`,
+        });
       }
 
       if (invalidFields.length === 1) {
-        const error = new Error(
-          `The following property is required: ${invalidFields.join(", ")}`
-        );
-        error.status = 400;
-        throw error;
+        next({
+          status: 400,
+          message: `The following property is required: ${invalidFields.join(
+            ", "
+          )}`,
+        });
       }
 
       next();

@@ -61,6 +61,26 @@ const hasRequiredProperties = hasProperties(
   "people"
 );
 
+// check if people property is number and is greater than 0
+function isValidPeople(req, res, next) {
+  const { people } = req.body.data;
+  if (!Number.isInteger(people)) {
+    next({
+      status: 400,
+      message: "People must be a number.",
+    });
+  }
+
+  if (people < 1) {
+    next({
+      status: 400,
+      message: "People must be greater than 0.",
+    });
+  }
+
+  next();
+}
+
 /* function todaysDate() {
   const date = new Date();
 
@@ -126,8 +146,9 @@ function read(req, res, next) {
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
-    hasOnlyValidProperties,
     hasRequiredProperties,
+    hasOnlyValidProperties,
+    isValidPeople,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
