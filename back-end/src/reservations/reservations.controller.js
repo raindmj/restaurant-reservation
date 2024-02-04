@@ -61,19 +61,7 @@ const hasRequiredProperties = hasProperties(
   "people"
 );
 
-/* function asDateString(date) {
-  return `${date.getFullYear().toString(10)}-${(date.getMonth() + 1)
-    .toString(10)
-    .padStart(2, "0")}-${date.getDate().toString(10).padStart(2, "0")}`;
-}
-
-function todaysDate() {
-  return asDateString(new Date());
-}
-
-console.log(todaysDate()); */
-
-function todaysDate2() {
+/* function todaysDate() {
   const date = new Date();
 
   const year = date.toLocaleString("default", { year: "numeric" });
@@ -85,7 +73,7 @@ function todaysDate2() {
   return formattedDate;
 }
 
-// console.log(todaysDate2());
+console.log(todaysDate()); */
 
 /**
  * List handler for reservation resources
