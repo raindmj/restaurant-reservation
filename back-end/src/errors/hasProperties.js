@@ -6,7 +6,6 @@ function hasProperties(...properties) {
       let invalidFields = [];
 
       properties.forEach((property) => {
-        console.log(data[property]);
         if (!data[property]) {
           invalidFields.push(property);
         }
