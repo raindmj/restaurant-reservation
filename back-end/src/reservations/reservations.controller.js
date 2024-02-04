@@ -82,7 +82,7 @@ function hasValidPeople(req, res, next) {
 }
 
 // check if inputted reservation_date matches given format
-function hasValidReservationDate(req, res, next) {
+function hasValidDate(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
 
   /* const regex2 =
@@ -132,7 +132,7 @@ function hasDateAndTimeInFuture(req, res, next) {
   next();
 }
 
-function hasValidReservationTime(req, res, next) {
+function hasValidTime(req, res, next) {
   const { reservation_time } = req.body.data;
 
   // check format of time, should be HH:MM
@@ -234,9 +234,9 @@ module.exports = {
     hasRequiredProperties,
     hasOnlyValidProperties,
     hasValidPeople,
-    hasValidReservationDate,
+    hasValidDate,
     hasDateAndTimeInFuture,
-    hasValidReservationTime,
+    hasValidTime,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
