@@ -83,7 +83,7 @@ function hasValidPeople(req, res, next) {
 
 // check if inputted reservation_date matches given format
 function hasValidReservationDate(req, res, next) {
-  const { reservation_date } = req.body.data;
+  const { reservation_date, reservation_time } = req.body.data;
 
   /* const regex2 =
     /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/; */
@@ -100,9 +100,11 @@ function hasValidReservationDate(req, res, next) {
   }
 
   // check if date is on a Tuesday, restaurant is closed on Tuesdays
-  const [year, month, day] = reservation_date.split("-");
-  const date = new Date(`${month}, ${day}, ${year}`);
-  const dayOfTheWeek = date.getDay();
+  const dateAndTime = new Date(`${reservation_date}T${reservation_time}`);
+
+  res.locals.dateAndTime = dateAndTime; // save date to res.locals
+
+  const dayOfTheWeek = dateAndTime.getDay();
 
   if (dayOfTheWeek === 2) {
     next({
@@ -111,7 +113,21 @@ function hasValidReservationDate(req, res, next) {
     });
   }
 
-  // check if date is in the past, only future reservations allowed
+  next();
+}
+
+// check if reservation date and time is in the past, only future reservations are allowed
+// e.g., if it is noon, only allow reservations starting after noon today
+function hasDateAndTimeInFuture(req, res, next) {
+  const { dateAndTime } = res.locals;
+  const today = new Date();
+
+  if (dateAndTime < today) {
+    next({
+      status: 400,
+      message: "Reservation must be made for a date and time in the future.",
+    });
+  }
 
   next();
 }
@@ -130,9 +146,22 @@ function hasValidReservationTime(req, res, next) {
   }
 
   // check if reservation time is between 10:30 AM and 9:30 PM
+  const earliestReservationTime = "10:30";
+  const latestReservationTime = "21:30";
 
-  // check if reservation time is in the past, only future reservations are allowed
-  // e.g., if it is noon, only allow reservations starting after noon today
+  if (reservation_time <= earliestReservationTime) {
+    next({
+      status: 400,
+      message: "Reservation time must be after 10:30 AM.",
+    });
+  }
+
+  if (reservation_time >= latestReservationTime) {
+    next({
+      status: 400,
+      message: "Reservation time must be before 9:30 PM.",
+    });
+  }
 
   next();
 }
@@ -206,6 +235,7 @@ module.exports = {
     hasOnlyValidProperties,
     hasValidPeople,
     hasValidReservationDate,
+    hasDateAndTimeInFuture,
     hasValidReservationTime,
     asyncErrorBoundary(create),
   ],
