@@ -3,13 +3,29 @@ function hasProperties(...properties) {
     const { data = {} } = req.body;
 
     try {
+      let invalidFields = [];
       properties.forEach((property) => {
         if (!data[property]) {
-          const error = new Error(`A '${property}' property is required.`);
-          error.status = 400;
-          throw error;
+          invalidFields.push(property);
         }
       });
+
+      if (invalidFields.length > 1) {
+        const error = new Error(
+          `The following properties are required: ${invalidFields.join(", ")}`
+        );
+        error.status = 400;
+        throw error;
+      }
+
+      if (invalidFields.length === 1) {
+        const error = new Error(
+          `The following property is required: ${invalidFields.join(", ")}`
+        );
+        error.status = 400;
+        throw error;
+      }
+
       next();
     } catch (error) {
       next(error);
