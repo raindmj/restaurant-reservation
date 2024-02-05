@@ -52,7 +52,7 @@ function isValidTable(req, res, next) {
   if (table_name.length < 2) {
     next({
       status: 400,
-      message: "Table name must be at least 2 characters long.",
+      message: "The table_name field must be at least 2 characters long.",
     });
   }
 
