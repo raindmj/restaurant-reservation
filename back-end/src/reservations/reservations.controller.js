@@ -166,9 +166,12 @@ function isValidTime(req, res, next) {
   next();
 }
 
-function isValidStatus(req, res, next) {
-  const VALID_STATUSES = ["booked", "seated", "finished", "cancelled"];
+// define the valid statuses
+const VALID_STATUSES = ["booked", "seated", "finished", "cancelled"];
 
+// check if:
+// 1. inputted status
+function isValidStatus(req, res, next) {
   const inputtedStatus = req.body.data.status;
   const currentStatus = res.locals.reservation.status;
 
@@ -182,8 +185,20 @@ function isValidStatus(req, res, next) {
   if (currentStatus === "finished") {
     next({
       status: 400,
-      message:
-        "The status of a reservation that is already finished cannot be updated.",
+      message: "A reservation with a status of finished cannot be updated.",
+    });
+  }
+
+  next();
+}
+
+function hasBookedStatus(req, res, next) {
+  const { status } = req.body.data;
+
+  if (status === "seated" || status === "finished" || status === "cancelled") {
+    next({
+      status: 400,
+      message: `A new reservation cannot have a status of ${status}.`,
     });
   }
 
@@ -277,6 +292,7 @@ module.exports = {
     isValidDate,
     isDateAndTimeInFuture,
     isValidTime,
+    hasBookedStatus,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
