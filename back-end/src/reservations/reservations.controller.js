@@ -166,6 +166,30 @@ function isValidTime(req, res, next) {
   next();
 }
 
+function isValidStatus(req, res, next) {
+  const VALID_STATUSES = ["booked", "seated", "finished", "cancelled"];
+
+  const inputtedStatus = req.body.data.status;
+  const currentStatus = res.locals.reservation.status;
+
+  if (!VALID_STATUSES.includes(inputtedStatus)) {
+    next({
+      status: 400,
+      message: `${inputtedStatus} is not a valid status.`,
+    });
+  }
+
+  if (currentStatus === "finished") {
+    next({
+      status: 400,
+      message:
+        "The status of a reservation that is already finished cannot be updated.",
+    });
+  }
+
+  next();
+}
+
 /* function todaysDate() {
   const date = new Date();
 
@@ -225,7 +249,7 @@ async function create(req, res, next) {
 
 function read(req, res, next) {
   const data = res.locals.reservation;
-  res.json({ reservation });
+  res.json({ data });
 }
 
 /*
@@ -258,6 +282,7 @@ module.exports = {
   read: [asyncErrorBoundary(reservationExists), read],
   updateStatus: [
     asyncErrorBoundary(reservationExists),
+    isValidStatus,
     asyncErrorBoundary(updateStatus),
   ],
 };

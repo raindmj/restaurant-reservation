@@ -10,7 +10,7 @@ const methodNotAllowed = require("../errors/methodNotAllowed");
 
 router
   .route("/:reservation_id/status")
-  .get(controller.updateStatus)
+  .put(controller.updateStatus)
   .all(methodNotAllowed);
 
 router.route("/:reservation_id").get(controller.read).all(methodNotAllowed);
