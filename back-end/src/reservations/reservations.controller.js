@@ -62,7 +62,7 @@ const hasRequiredProperties = hasProperties(
 );
 
 // check if inputted people is number and is greater than 0
-function hasValidPeople(req, res, next) {
+function isValidPeople(req, res, next) {
   const { people } = req.body.data;
   if (!Number.isInteger(people)) {
     next({
@@ -82,7 +82,7 @@ function hasValidPeople(req, res, next) {
 }
 
 // check if inputted reservation_date matches given format
-function hasValidDate(req, res, next) {
+function isValidDate(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
 
   /* const regex2 =
@@ -118,7 +118,7 @@ function hasValidDate(req, res, next) {
 
 // check if reservation date and time is in the past, only future reservations are allowed
 // e.g., if it is noon, only allow reservations starting after noon today
-function hasDateAndTimeInFuture(req, res, next) {
+function isDateAndTimeInFuture(req, res, next) {
   const { dateAndTime } = res.locals;
   const today = new Date();
 
@@ -132,7 +132,7 @@ function hasDateAndTimeInFuture(req, res, next) {
   next();
 }
 
-function hasValidTime(req, res, next) {
+function isValidTime(req, res, next) {
   const { reservation_time } = req.body.data;
 
   // check format of time, should be HH:MM
@@ -224,8 +224,24 @@ async function create(req, res, next) {
  */
 
 function read(req, res, next) {
-  const { reservation } = res.locals;
-  res.json({ data: reservation });
+  const data = res.locals.reservation;
+  res.json({ reservation });
+}
+
+/*
+ * Update reservation status
+ */
+
+async function updateStatus(req, res, next) {
+  const { reservation_id } = res.locals.reservation;
+  const { status } = req.body.data;
+
+  try {
+    const data = await service.updateStatus(reservation_id, status);
+    res.json({ data });
+  } catch (error) {
+    next(error);
+  }
 }
 
 module.exports = {
@@ -233,11 +249,15 @@ module.exports = {
   create: [
     hasRequiredProperties,
     hasOnlyValidProperties,
-    hasValidPeople,
-    hasValidDate,
-    hasDateAndTimeInFuture,
-    hasValidTime,
+    isValidPeople,
+    isValidDate,
+    isDateAndTimeInFuture,
+    isValidTime,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
+  updateStatus: [
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(updateStatus),
+  ],
 };

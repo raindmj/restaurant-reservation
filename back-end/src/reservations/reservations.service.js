@@ -31,6 +31,16 @@ function read(reservation_id) {
   return knex("reservations").select("*").where({ reservation_id }).first();
 }
 
+// update status of a reservation
+function updateStatus(reservation_id, status) {
+  return knex("reservations")
+    .select("*")
+    .where({ reservation_id })
+    .update({ status })
+    .returning("*")
+    .then((updatedStatus) => updatedStatus[0]);
+}
+
 // search reservations by mobile_number
 // ignore all formatting and search only for the digits
 function search(mobile_number) {
@@ -47,5 +57,6 @@ module.exports = {
   listByDate,
   create,
   read,
+  updateStatus,
   search,
 };
