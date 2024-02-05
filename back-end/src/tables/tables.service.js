@@ -14,8 +14,12 @@ function create(table) {
 }
 
 // find a single table given table id
+function read(table_id) {
+  return knex("tables").select("*").where({ table_id }).first();
+}
 
 module.exports = {
   list,
   create,
+  read,
 };
