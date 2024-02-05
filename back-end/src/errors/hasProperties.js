@@ -15,6 +15,10 @@ function hasProperties(...properties) {
         next();
       }
 
+      if (data["capacity"] === 0) {
+        next();
+      }
+
       if (invalidFields.length > 1) {
         next({
           status: 400,
