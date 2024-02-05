@@ -106,6 +106,22 @@ function read(req, res, next) {
   res.json({ data: table });
 }
 
+async function update(req, res, next) {
+  const { table } = res.locals;
+
+  const updatedTable = {
+    ...req.body.data,
+    table_id: table.table_id,
+  };
+
+  try {
+    const data = await service.update(updatedTable);
+    res.json({ data });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -115,4 +131,5 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(tableExists), read],
+  update: [asyncErrorBoundary(update)],
 };
