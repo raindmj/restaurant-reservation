@@ -225,8 +225,6 @@ console.log(todaysDate()); */
 async function list(req, res, next) {
   try {
     const { date, mobile_number } = req.query;
-    console.log(date);
-    console.log(mobile_number);
     // list by date
     if (date) {
       const data = await service.listByDate(date);
