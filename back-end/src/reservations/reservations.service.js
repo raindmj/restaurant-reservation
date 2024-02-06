@@ -32,13 +32,12 @@ function read(reservation_id) {
 }
 
 // update status of a reservation
-function updateStatus(reservation_id, status) {
+function updateStatus(updatedReservation) {
   return knex("reservations")
     .select("*")
-    .where({ reservation_id })
-    .update({ status })
-    .returning("*")
-    .then((updatedStatus) => updatedStatus[0]);
+    .where({ reservation_id: updatedReservation.reservation_id })
+    .update(updatedReservation, "*")
+    .then((updatedRecords) => updatedRecords[0]);
 }
 
 // search reservations by mobile_number
