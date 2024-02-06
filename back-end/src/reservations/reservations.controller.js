@@ -279,7 +279,23 @@ async function updateStatus(req, res, next) {
   };
 
   try {
-    const data = await service.updateStatus(updatedReservation);
+    const data = await service.update(updatedReservation);
+    res.json({ data });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function updateReservation(req, res, next) {
+  const { reservation_id } = res.locals.reservation;
+
+  const updatedReservation = {
+    ...req.body.data,
+    reservation_id,
+  };
+
+  try {
+    const data = await service.update(updatedReservation);
     res.json({ data });
   } catch (error) {
     next(error);
@@ -299,6 +315,17 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
+  updateReservation: [
+    asyncErrorBoundary(reservationExists),
+    hasRequiredProperties,
+    hasOnlyValidProperties,
+    isValidPeople,
+    isValidDate,
+    isDateAndTimeInFuture,
+    isValidTime,
+    hasBookedStatus,
+    asyncErrorBoundary(updateReservation),
+  ],
   updateStatus: [
     asyncErrorBoundary(reservationExists),
     isValidStatus,
