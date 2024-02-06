@@ -132,6 +132,20 @@ function tableIsNotOccupied(req, res, next) {
   next();
 }
 
+async function readReservationAfterRemovingIdFromTable(req, res, next) {
+  const { reservation_id } = res.locals.table;
+  const reservation = await reservationsService.read(reservation_id);
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  } else {
+    next({
+      status: 404,
+      message: `Reservation with id ${reservation_id} does not exist.`,
+    });
+  }
+}
+
 /* ---- CRUD ---- */
 
 /**
@@ -232,8 +246,8 @@ module.exports = {
   ],
   delete: [
     asyncErrorBoundary(tableExists),
-    asyncErrorBoundary(reservationExists),
     tableIsNotOccupied,
+    asyncErrorBoundary(readReservationAfterRemovingIdFromTable),
     asyncErrorBoundary(destroy),
   ],
 };
