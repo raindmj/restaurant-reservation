@@ -19,12 +19,24 @@ function read(table_id) {
 }
 
 // update a table with reservation id
-function update(updatedTable) {
-  return knex("tables")
+// then update reservations with new status
+async function update(updatedTable, updatedReservation) {
+  const trx = await knex.transaction();
+
+  return trx("tables")
     .select("*")
     .where({ table_id: updatedTable.table_id })
     .update(updatedTable, "*")
-    .then((updatedRecords) => updatedRecords[0]);
+    .then((updatedTablesRecords) => updatedTablesRecords[0])
+    .then(async () => {
+      return trx("reservations")
+        .select("*")
+        .where({ reservation_id: updatedReservation.reservation_id })
+        .update(updatedReservation, "*")
+        .then((updatedReservationsRecords) => updatedReservationsRecords[0]);
+    })
+    .then(trx.commit)
+    .catch(trx.rollback);
 }
 
 module.exports = {

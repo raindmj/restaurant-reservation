@@ -2,6 +2,7 @@ const tablesService = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
 const reservationsService = require("../reservations/reservations.service");
+const P = require("pino");
 
 /*
  * Validation middleware
@@ -90,9 +91,10 @@ async function reservationExists(req, res, next) {
 // check if:
 // 1. capacity of table will fit people in reservation
 // 2. reservation id exists for that table, if it does then it's occupied
+// 3. reservation id is already seated at a table
 function canMakeReservationAtTable(req, res, next) {
   const { capacity, table_id, reservation_id } = res.locals.table;
-  const { people } = res.locals.reservation;
+  const { people, status } = res.locals.reservation;
 
   if (capacity < people) {
     next({
@@ -105,6 +107,13 @@ function canMakeReservationAtTable(req, res, next) {
     next({
       status: 400,
       message: `Table ${table_id} is occupied.`,
+    });
+  }
+
+  if (status === "seated") {
+    next({
+      status: 400,
+      message: `Reservation id ${reservation_id} is already seated at table ${table_id}.`,
     });
   }
 
@@ -155,8 +164,13 @@ async function update(req, res, next) {
     table_id,
   };
 
+  const updatedReservation = {
+    status: "seated",
+    reservation_id,
+  };
+
   try {
-    const data = await tablesService.update(updatedTable);
+    const data = await tablesService.update(updatedTable, updatedReservation);
     res.json({ data });
   } catch (error) {
     next(error);
