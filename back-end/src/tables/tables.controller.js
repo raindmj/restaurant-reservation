@@ -1,6 +1,7 @@
-const service = require("./tables.service");
+const tablesService = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
+const reservationsService = require("../reservations/reservations.service");
 
 /*
  * Validation middleware
@@ -9,7 +10,7 @@ const hasProperties = require("../errors/hasProperties");
 // check if table with table_id exists
 async function tableExists(req, res, next) {
   const { table_id } = req.params;
-  const table = await service.read(table_id);
+  const table = await tablesService.read(table_id);
   if (table) {
     res.locals.table = table;
     return next();
@@ -40,12 +41,9 @@ function hasOnlyValidProperties(req, res, next) {
   next();
 }
 
-// checks whether or not the request body includes required fields
-const hasRequiredProperties = hasProperties("table_name", "capacity");
-
 // check whether table has:
 // 1. table_name that is at least 2 characters long
-// 2. capacity is at least 1 person
+// 2. capacity of at least 1 person
 function isValidTable(req, res, next) {
   const { table_name, capacity } = req.body.data;
 
@@ -73,12 +71,54 @@ function isValidTable(req, res, next) {
   next();
 }
 
+// check if reservation exists and read reservation given reservation_id
+// use the found reservation to update table reservation_id
+async function reservationExists(req, res, next) {
+  const { reservation_id } = req.body.data;
+  const reservation = await reservationsService.read(reservation_id);
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  } else {
+    next({
+      status: 404,
+      message: `Reservation with id ${reservation_id} does not exist.`,
+    });
+  }
+}
+
+// check if:
+// 1. capacity of table will fit people in reservation
+// 2. reservation id exists for that table, if it does then it's occupied
+function canMakeReservationAtTable(req, res, next) {
+  const { capacity, table_id, reservation_id } = res.locals.table;
+  const { people } = res.locals.reservation;
+
+  if (capacity < people) {
+    next({
+      status: 400,
+      message: `Table ${table_id} does not have sufficient capacity for the amount of people in the reservation.`,
+    });
+  }
+
+  if (reservation_id) {
+    next({
+      status: 400,
+      message: `Table ${table_id} is occupied.`,
+    });
+  }
+
+  next();
+}
+
+/* ---- CRUD ---- */
+
 /**
  * List handler for table resources
  */
 async function list(req, res, next) {
   try {
-    const data = await service.list();
+    const data = await tablesService.list();
     res.json({ data });
   } catch (error) {
     next(error);
@@ -90,7 +130,7 @@ async function list(req, res, next) {
  */
 async function create(req, res, next) {
   try {
-    const data = await service.create(req.body.data);
+    const data = await tablesService.create(req.body.data);
     res.status(201).json({ data });
   } catch (error) {
     next(error);
@@ -107,15 +147,16 @@ function read(req, res, next) {
 }
 
 async function update(req, res, next) {
-  const { table } = res.locals;
+  const { table_id } = res.locals.table;
+  const { reservation_id } = res.locals.reservation;
 
   const updatedTable = {
-    ...req.body.data,
-    table_id: table.table_id,
+    reservation_id,
+    table_id,
   };
 
   try {
-    const data = await service.update(updatedTable);
+    const data = await tablesService.update(updatedTable);
     res.json({ data });
   } catch (error) {
     next(error);
@@ -125,11 +166,17 @@ async function update(req, res, next) {
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
-    hasRequiredProperties,
+    hasProperties("table_name", "capacity"),
     hasOnlyValidProperties,
     isValidTable,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(tableExists), read],
-  update: [asyncErrorBoundary(update)],
+  update: [
+    asyncErrorBoundary(tableExists),
+    hasProperties("reservation_id"),
+    asyncErrorBoundary(reservationExists),
+    canMakeReservationAtTable,
+    asyncErrorBoundary(update),
+  ],
 };
