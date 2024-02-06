@@ -2,7 +2,6 @@ const tablesService = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
 const reservationsService = require("../reservations/reservations.service");
-const P = require("pino");
 
 /*
  * Validation middleware
@@ -120,6 +119,19 @@ function canMakeReservationAtTable(req, res, next) {
   next();
 }
 
+function tableIsNotOccupied(req, res, next) {
+  const { reservation_id, table_id } = res.locals.table;
+
+  if (!reservation_id) {
+    next({
+      status: 400,
+      message: `Table ${table_id} is not occupied.`,
+    });
+  }
+
+  next();
+}
+
 /* ---- CRUD ---- */
 
 /**
@@ -151,8 +163,8 @@ async function create(req, res, next) {
  */
 
 function read(req, res, next) {
-  const { table } = res.locals;
-  res.json({ data: table });
+  const data = res.locals.table;
+  res.json({ data });
 }
 
 async function update(req, res, next) {
@@ -177,6 +189,31 @@ async function update(req, res, next) {
   }
 }
 
+async function destroy(req, res, next) {
+  const { table_id } = res.locals.table;
+  const { reservation_id } = res.locals.reservation;
+
+  const updatedTable = {
+    reservation_id: null,
+    table_id,
+  };
+
+  const updatedReservation = {
+    status: "finished",
+    reservation_id,
+  };
+
+  try {
+    const data = await tablesService.update(updatedTable, updatedReservation);
+
+    // const data = await tablesService.list();
+
+    res.json({ data });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -192,5 +229,11 @@ module.exports = {
     asyncErrorBoundary(reservationExists),
     canMakeReservationAtTable,
     asyncErrorBoundary(update),
+  ],
+  delete: [
+    asyncErrorBoundary(tableExists),
+    asyncErrorBoundary(reservationExists),
+    tableIsNotOccupied,
+    asyncErrorBoundary(destroy),
   ],
 };
