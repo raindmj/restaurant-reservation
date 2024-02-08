@@ -78,15 +78,15 @@ export async function listReservations(params, signal) {
  * @returns {Promise<deck>}
  *  a promise that resolves the saved reservation, which will now have an `id` property.
  */
-export async function createReservation(reservation, signal) {
+export async function createReservation(newReservation, signal) {
   const url = `${API_BASE_URL}/reservations`;
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({ data: reservation }),
+    body: JSON.stringify({ data: newReservation }),
     signal,
   };
-  return await fetchJson(url, options, reservation);
+  return await fetchJson(url, options, newReservation);
 }
 
 /**
