@@ -171,15 +171,15 @@ export async function listTables(signal) {
  * @returns {Promise<deck>}
  *  a promise that resolves the saved table, which will now have an `id` property.
  */
-export async function createTable(table, signal) {
+export async function createTable(newTable, signal) {
   const url = `${API_BASE_URL}/tables`;
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({ data: table }),
+    body: JSON.stringify({ data: newTable }),
     signal,
   };
-  return await fetchJson(url, options, table);
+  return await fetchJson(url, options, newTable);
 }
 
 /**
@@ -208,13 +208,24 @@ export async function updateTable(table_id, reservation_id, signal) {
  * Updates an existing table's reservation_id to null and changes the status of that reservation_id to "finished"
  * @param table_id
  * the table to remove a reservation from.
+ * @param reservation_id
+ * the id of the reservation to be removed from the table.
  * @param signal
  *  optional AbortController.signal
  * @returns {Promise<Error|*>}
  *  a promise that resolves to the updated table, which must have an `id` property.
  */
-export async function removeReservationFromTable(table_id, signal) {
+export async function removeReservationFromTable(
+  table_id,
+  reservation_id,
+  signal
+) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
-  const options = { method: "DELETE", signal };
+  const options = {
+    method: "DELETE",
+    body: JSON.stringify({ data: { reservation_id } }),
+    headers,
+    signal,
+  };
   return await fetchJson(url, options);
 }
