@@ -14,6 +14,7 @@ function SeatReservation() {
 
   const history = useHistory();
   const { reservation_id } = useParams();
+  console.log(formData);
 
   useEffect(() => {
     async function loadDashboard() {
@@ -21,13 +22,14 @@ function SeatReservation() {
       setTablesError(null);
       setReservationError(null);
       try {
-        const listedTables = await listTables(abortController.signal);
-        setTables(listedTables);
-        const reserved = await readReservation(reservation_id);
-        setReservation(reserved);
-      } catch (err) {
-        setTablesError({ message: err.response.data.error });
-        setReservationError({ message: err.response.data.error });
+        const tablesData = await listTables(abortController.signal);
+        setTables(tablesData);
+
+        const reservationData = await readReservation(reservation_id);
+        setReservation(reservationData);
+      } catch (error) {
+        setTablesError({ message: error.response.data.error });
+        setReservationError({ message: error.response.data.error });
       }
       return () => abortController.abort();
     }
@@ -39,7 +41,7 @@ function SeatReservation() {
     try {
       if (formData === "Please select a table")
         throw new Error("Please select a valid table");
-      await updateTable(formData, { data: { reservation_id } });
+      await updateTable(formData, reservation_id);
       history.push("/dashboard");
     } catch (error) {
       if (error.response)

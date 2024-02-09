@@ -14,7 +14,7 @@ function SeatForm({ handleSubmit, handleChange, formData, tables }) {
           onChange={handleChange}
           value={formData}
         >
-          <option>Please Select a table</option>
+          <option>Please select a table</option>
           {tables.map((table) => {
             return (
               <option key={table.table_id} value={table.table_id}>
