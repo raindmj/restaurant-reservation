@@ -11,13 +11,14 @@ function Reservation({ reservation }) {
   async function handleCancel() {
     if (
       window.confirm(
-        "Do you want to cancel this reservation? \n \n \nThis cannot be undone."
+        "Do you want to cancel this reservation? \n \nThis cannot be undone."
       )
     ) {
       try {
-        await updateStatusOfReservation(reservation.reservation_id, {
-          data: { status: "cancelled" },
-        });
+        await updateStatusOfReservation(
+          reservation.reservation_id,
+          "cancelled"
+        );
         window.location.reload();
       } catch (error) {
         console.error(error);
