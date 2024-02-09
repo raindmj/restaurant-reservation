@@ -7,7 +7,7 @@ function EditReservation() {
   const [currentReservation, setCurrentReservation] = useState({});
 
   const params = useParams();
-  console.log(params);
+  //   console.log(params);
   const reservation_id = params.reservation_id;
 
   useEffect(() => {
