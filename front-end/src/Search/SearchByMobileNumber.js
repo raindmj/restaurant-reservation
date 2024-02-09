@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReservationsList from "../Reservations/ReservationsList";
 import ErrorAlert from "../layout/ErrorAlert";
 import { listReservations } from "../utils/api";
 import SearchForm from "./SearchForm";
@@ -18,10 +19,14 @@ function SearchByMobileNumber() {
     const abortController = new AbortController();
 
     try {
-      const data = await listReservations(mobileNumber, abortController.signal);
+      const data = await listReservations(
+        { mobile_number: mobileNumber },
+        abortController.signal
+      );
+
       setReservations(data);
 
-      if (!reservations.length) {
+      if (reservations.length) {
         setReservationsError({ message: "No reservations found" });
       }
     } catch (error) {
@@ -36,7 +41,14 @@ function SearchByMobileNumber() {
         handleChange={handleChange}
         mobile_number={mobileNumber}
       />
-      <ErrorAlert error={reservationsError} />
+      {reservations.length ? (
+        <div>
+          <h3>Reservations</h3>
+          <ReservationsList reservations={reservations} />
+        </div>
+      ) : (
+        <ErrorAlert error={reservationsError} />
+      )}
     </div>
   );
 }
