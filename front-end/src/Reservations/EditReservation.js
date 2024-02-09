@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
+import ErrorAlert from "../layout/ErrorAlert";
 import { readReservation, updateReservation } from "../utils/api";
 import ReservationForm from "./ReservationForm";
 
 function EditReservation() {
   const [currentReservation, setCurrentReservation] = useState({});
+  const [error, setError] = useState(null);
 
   const params = useParams();
   //   console.log(params);
@@ -53,8 +55,13 @@ function EditReservation() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    await updateReservation(formData);
-    history.goBack();
+
+    try {
+      await updateReservation(formData);
+      history.goBack();
+    } catch (error) {
+      setError(error);
+    }
   }
 
   function handleCancel() {
@@ -71,6 +78,7 @@ function EditReservation() {
           handleCancel={handleCancel}
           formData={formData}
         />
+        <ErrorAlert error={error} />
       </div>
     );
   } else {
