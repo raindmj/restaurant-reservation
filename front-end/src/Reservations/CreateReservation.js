@@ -18,6 +18,7 @@ function CreateReservation() {
   const [formData, setFormData] = useState({ ...initialFormDate });
   const [error, setError] = useState(null);
 
+  // TODO: people is always string even when I try to convert to number
   function handleChange(event) {
     event.preventDefault();
 

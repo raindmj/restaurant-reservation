@@ -14,6 +14,7 @@ function CreateTable() {
   const [formData, setFormData] = useState({ ...initialFormDate });
   const [error, setError] = useState(null);
 
+  // TODO: capacity always string
   function handleChange(event) {
     event.preventDefault();
 

@@ -6,7 +6,7 @@ import { listTables, readReservation, updateTable } from "../utils/api";
 import SeatForm from "./SeatForm";
 
 function SeatReservation() {
-  const [formData, setFormData] = useState("Please Select a table");
+  const [formData, setFormData] = useState("Please select a table");
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
   const [reservation, setReservation] = useState([]);
@@ -34,10 +34,10 @@ function SeatReservation() {
     loadDashboard();
   }, [reservation_id]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
     try {
-      if (formData === "Please Select a table")
+      if (formData === "Please select a table")
         throw new Error("Please select a valid table");
       await updateTable(formData, { data: { reservation_id } });
       history.push("/dashboard");
@@ -46,14 +46,16 @@ function SeatReservation() {
         setTablesError({ message: error.response.data.error });
       if (!error.response) setTablesError(error);
     }
-  };
-  const handleChange = (event) => {
+  }
+
+  function handleChange(event) {
     setFormData(event.target.value);
-  };
-  const handleCancel = () => {
-    setFormData("Please Select a table");
+  }
+
+  function handleCancel() {
+    setFormData("Please select a table");
     history.goBack();
-  };
+  }
 
   return (
     <>
