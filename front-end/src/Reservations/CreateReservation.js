@@ -18,22 +18,22 @@ function CreateReservation() {
   const [formData, setFormData] = useState({ ...initialFormDate });
   const [error, setError] = useState(null);
 
-  // TODO: people is always string even when I try to convert to number
   function handleChange(event) {
     event.preventDefault();
 
-    if (event.target.type === "number") {
-      event.target.value = Number(event.target.value);
+    if (event.target.name === "people") {
+      const peopleValue = Number(event.target.value);
+
+      setFormData({
+        ...formData,
+        [event.target.name]: peopleValue,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [event.target.name]: event.target.value,
+      });
     }
-
-    // console.log(event.target.name);
-    console.log(event.target.value);
-    console.log(typeof event.target.value);
-
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
   }
 
   const history = useHistory();

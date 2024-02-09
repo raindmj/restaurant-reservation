@@ -31,6 +31,7 @@ function EditReservation() {
   const [formData, setFormData] = useState(initialFormData);
   // console.log(formData)
 
+  // TODO: doesn't work either since new people number is still string
   function handleChange(event) {
     event.preventDefault();
     setFormData({
