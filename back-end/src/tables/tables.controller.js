@@ -22,7 +22,7 @@ async function tableExists(req, res, next) {
   }
 }
 
-const VALID_PROPERTIES = ["table_name", "capacity"];
+const VALID_PROPERTIES = ["table_name", "capacity", "reservation_id"];
 
 // checks whether the request body contains a specified set of allowed fields from the given valid properties array
 function hasOnlyValidProperties(req, res, next) {
@@ -121,6 +121,7 @@ function canMakeReservationAtTable(req, res, next) {
 
 function tableIsNotOccupied(req, res, next) {
   const { reservation_id, table_id } = res.locals.table;
+  console.log("reservation id", reservation_id);
 
   if (!reservation_id) {
     next({
@@ -132,6 +133,7 @@ function tableIsNotOccupied(req, res, next) {
   next();
 }
 
+// TODO: rename maybe
 async function readReservationAfterRemovingIdFromTable(req, res, next) {
   const { reservation_id } = res.locals.table;
   const reservation = await reservationsService.read(reservation_id);
