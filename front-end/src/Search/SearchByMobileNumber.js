@@ -4,7 +4,6 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { listReservations } from "../utils/api";
 import SearchForm from "./SearchForm";
 
-// TODO: sometimes displays nothing when clicking find instead of error
 function SearchByMobileNumber() {
   const [mobileNumber, setMobileNumber] = useState("");
   const [reservations, setReservations] = useState([]);
@@ -27,7 +26,7 @@ function SearchByMobileNumber() {
 
       setReservations(data);
 
-      if (reservations.length) {
+      if (!reservations.length) {
         setReservationsError({ message: "No reservations found" });
       }
     } catch (error) {
