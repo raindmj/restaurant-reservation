@@ -3,6 +3,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import CreateReservation from "../Reservations/CreateReservation";
 import EditReservation from "../Reservations/EditReservation";
+import SearchByMobileNumber from "../Search/SearchByMobileNumber";
 import CreateTable from "../Tables/CreateTable";
 import Dashboard from "../dashboard/Dashboard";
 import { today } from "../utils/date-time";
@@ -30,8 +31,9 @@ function Routes() {
       <Route path="/tables/new">
         <CreateTable />
       </Route>
-      {/* TODO: search by mobile number component */}
-      <Route path="/search"></Route>
+      <Route path="/search">
+        <SearchByMobileNumber />
+      </Route>
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
       </Route>
