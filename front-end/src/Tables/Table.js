@@ -25,9 +25,9 @@ function Table({ table }) {
           <span className="oi oi-people m-2"> </span> {table.capacity}
         </h6>
         {table.reservation_id ? (
-          <h6 data-table-id-status={table.table_id}>Occupied</h6>
+          <h6 data-table-id-status={table.table_id}>occupied</h6>
         ) : (
-          <h6 data-table-id-status={table.table_id}>Free</h6>
+          <h6 data-table-id-status={table.table_id}>free</h6>
         )}
         {table.reservation_id ? (
           <button data-table-id-finish={table.table_id} onClick={handleFinish}>

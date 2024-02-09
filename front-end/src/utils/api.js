@@ -217,14 +217,14 @@ export async function updateTable(table_id, reservation_id, signal) {
  */
 export async function removeReservationFromTable(
   table_id,
-  reservation_id,
+  /* reservation_id, */
   signal
 ) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
     method: "DELETE",
-    body: JSON.stringify({ data: { reservation_id } }),
-    headers,
+    /* body: JSON.stringify({ data: { reservation_id } }),
+    headers, */
     signal,
   };
   return await fetchJson(url, options);
