@@ -20,8 +20,12 @@ function EditReservation() {
   }, [reservation_id]);
 
   const initialFormData = {
-    name: "",
-    description: "",
+    first_name: "",
+    last_name: "",
+    mobile_number: "",
+    reservation_date: "",
+    reservation_time: "",
+    people: 1,
   };
 
   const [formData, setFormData] = useState(initialFormData);
