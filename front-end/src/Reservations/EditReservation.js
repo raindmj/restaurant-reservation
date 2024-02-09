@@ -7,7 +7,7 @@ function EditReservation() {
   const [currentReservation, setCurrentReservation] = useState({});
 
   const params = useParams();
-  // console.log(params);
+  console.log(params);
   const reservation_id = params.reservation_id;
 
   useEffect(() => {
@@ -44,14 +44,14 @@ function EditReservation() {
   async function handleSubmit(event) {
     event.preventDefault();
     await updateReservation(formData);
-    history.push(`/reservations/${reservation_id}`);
+    history.goBack();
   }
 
   function handleCancel() {
-    history.push(`/reservations/${reservation_id}`);
+    history.goBack();
   }
 
-  if (currentReservation.id) {
+  if (currentReservation.reservation_id) {
     return (
       <div className="pb-4">
         <h1>Edit Reservation</h1>

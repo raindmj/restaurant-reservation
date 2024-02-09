@@ -19,11 +19,11 @@ function Routes() {
   return (
     <Switch>
       {/* TODO: edit a reservation component */}
-      <Route path="reservations/:reservation_id/edit">
+      <Route path="/reservations/:reservation_id/edit">
         <EditReservation />
       </Route>
       {/* TODO: seat component */}
-      <Route path="reservations/:reservation_id/seat"></Route>
+      <Route path="/reservations/:reservation_id/seat"></Route>
       <Route path="/reservations/new">
         <CreateReservation />
       </Route>
