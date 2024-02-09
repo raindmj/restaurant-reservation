@@ -137,8 +137,13 @@ function isValidTime(req, res, next) {
 
   // check format of time, should be HH:MM
   const timeFormatRegex = /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/;
+  const timeFormatRegexWithSeconds =
+    /^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/;
 
-  if (!timeFormatRegex.test(reservation_time)) {
+  if (
+    !timeFormatRegex.test(reservation_time) &&
+    !timeFormatRegexWithSeconds.test(reservation_time)
+  ) {
     next({
       status: 400,
       message: `The reservation_time of ${reservation_time} is not a valid time.`,

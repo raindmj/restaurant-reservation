@@ -58,7 +58,7 @@ function EditReservation() {
 
     try {
       await updateReservation(formData);
-      history.goBack();
+      history.push(`/dashboard?date=${formData.reservation_date}`);
     } catch (error) {
       setError(error);
     }
