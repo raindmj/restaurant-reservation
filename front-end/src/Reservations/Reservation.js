@@ -1,11 +1,29 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { updateStatusOfReservation } from "../utils/api";
 import { formatDate, formatPhone, formatTime } from "../utils/date-time";
 
-function Reservation({ reservation, handleDelete, handleCancel }) {
+function Reservation({ reservation }) {
   const date = formatDate(reservation.reservation_date);
   const time = formatTime(reservation.reservation_time);
   const phone = formatPhone(reservation.mobile_number);
+
+  async function handleCancel() {
+    if (
+      window.confirm(
+        "Do you want to cancel this reservation? \n \n \nThis cannot be undone."
+      )
+    ) {
+      try {
+        await updateStatusOfReservation(reservation.reservation_id, {
+          data: { status: "cancelled" },
+        });
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
 
   return (
     <div className="card m-3 bg-light" style={{ width: "18rem" }}>
