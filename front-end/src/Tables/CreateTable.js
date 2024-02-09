@@ -19,17 +19,19 @@ function CreateTable() {
     event.preventDefault();
 
     if (event.target.name === "capacity") {
-      event.target.value = Number(event.target.value);
+      const capacityValue = Number(event.target.value);
+      console.log("capacity value:", typeof capacityValue);
+
+      setFormData({
+        ...formData,
+        [event.target.name]: capacityValue,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [event.target.name]: event.target.value,
+      });
     }
-
-    // console.log(event.target.name);
-    console.log(event.target.value);
-    console.log(typeof event.target.value);
-
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
   }
 
   const history = useHistory();
