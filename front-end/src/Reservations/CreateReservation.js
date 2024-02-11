@@ -70,12 +70,14 @@ function CreateReservation() {
         <ErrorAlert error={error} />
       </div>
 
-      <ReservationForm
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-        handleCancel={handleCancel}
-        formData={formData}
-      />
+      <div className="">
+        <ReservationForm
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          handleCancel={handleCancel}
+          formData={formData}
+        />
+      </div>
     </div>
   );
 }

@@ -3,8 +3,10 @@ import React from "react";
 function TableForm({ handleSubmit, handleChange, handleCancel, formData }) {
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="table_name">Table Name:</label>
+      <div className="form-group">
+        <label htmlFor="table_name" className="form-label mr-2">
+          Table Name:
+        </label>
         <input
           id="table_name"
           name="table_name"
@@ -16,8 +18,10 @@ function TableForm({ handleSubmit, handleChange, handleCancel, formData }) {
           onChange={handleChange}
         />
       </div>
-      <div>
-        <label htmlFor="capacity">Capacity:</label>
+      <div className="form-group">
+        <label htmlFor="capacity" className="form-label mr-2">
+          Capacity:
+        </label>
         <input
           id="capacity"
           name="capacity"

@@ -9,7 +9,9 @@ function ReservationForm({
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">
-        <label htmlFor="first_name">First Name:</label>
+        <label htmlFor="first_name" className="form-label mr-2">
+          First Name:
+        </label>
         <input
           id="first_name"
           name="first_name"
@@ -20,8 +22,11 @@ function ReservationForm({
           onChange={handleChange}
         />
       </div>
+
       <div className="form-group">
-        <label htmlFor="last_name">Last Name:</label>
+        <label htmlFor="last_name" className="form-label mr-2">
+          Last Name:
+        </label>
         <input
           id="last_name"
           name="last_name"
@@ -34,7 +39,9 @@ function ReservationForm({
       </div>
 
       <div className="form-group">
-        <label htmlFor="mobile_number">Mobile Number:</label>
+        <label htmlFor="mobile_number" className="form-label mr-2">
+          Mobile Number:
+        </label>
         <input
           id="mobile_number"
           name="mobile_number"
@@ -46,8 +53,11 @@ function ReservationForm({
           onChange={handleChange}
         />
       </div>
+
       <div className="form-group">
-        <label htmlFor="reservation_date">Reservation Date:</label>
+        <label htmlFor="reservation_date" className="form-label mr-2">
+          Reservation Date:
+        </label>
         <input
           id="reservation_date"
           name="reservation_date"
@@ -60,8 +70,11 @@ function ReservationForm({
           onChange={handleChange}
         />
       </div>
+
       <div className="form-group">
-        <label htmlFor="reservation_time">Reservation Time:</label>
+        <label htmlFor="reservation_time" className="form-label mr-2">
+          Reservation Time:
+        </label>
         <input
           id="reservation_time"
           name="reservation_time"
@@ -74,8 +87,11 @@ function ReservationForm({
           onChange={handleChange}
         />
       </div>
+
       <div className="form-group">
-        <label htmlFor="people">Number of People:</label>
+        <label htmlFor="people" className="form-label mr-2">
+          Number of People:
+        </label>
         <input
           id="people"
           name="people"
@@ -86,6 +102,7 @@ function ReservationForm({
           onChange={handleChange}
         />
       </div>
+
       <button
         type="button"
         onClick={handleCancel}
@@ -93,6 +110,7 @@ function ReservationForm({
       >
         Cancel
       </button>
+
       <button type="submit" className="btn btn-primary">
         Submit
       </button>

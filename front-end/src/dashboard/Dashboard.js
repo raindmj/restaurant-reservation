@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import ReservationsList from "../Reservations/ReservationsList";
 import TablesList from "../Tables/TablesList";
 import ErrorAlert from "../layout/ErrorAlert";
@@ -15,11 +14,11 @@ import useQuery from "../utils/useQuery";
  */
 function Dashboard() {
   const query = useQuery();
-  const date = query.get("date") || today();
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
+  const [date, setDate] = useState(query.get("date") || today());
 
   useEffect(loadDashboard, [date]);
 
@@ -33,32 +32,51 @@ function Dashboard() {
     return () => abortController.abort();
   }
 
+  function handleDateChange(event) {
+    setDate(event.target.value);
+  }
+
   return (
     <main className="text-center">
       <h1 className="m-3">{formatDate(date)}</h1>
-      <Link
+      {/* <Link
         to={`/dashboard?date=${previous(date)}`}
-        // onClick={() => setDate(previous(date))}
-        className="btn btn-sm btn-light"
+        className="btn btn-sm btn-light mx-2"
       >
         Previous Day
       </Link>
       <Link
         to={`/dashboard?date=${today()}`}
-        // onClick={() => setDate(previous(date))}
-        className="btn btn-sm btn-light"
+        className="btn btn-sm btn-light mx-2"
       >
         Today
       </Link>
       <Link
         to={`/dashboard?date=${next(date)}`}
-        // onClick={() => setDate(previous(date))}
+        className="btn btn-sm btn-light mx-2"
+      >
+        Next Day
+      </Link> */}
+      <button
+        onClick={() => setDate(previous(date))}
+        className="btn btn-sm btn-light"
+      >
+        Previous Day
+      </button>
+      <button
+        className="mx-3 btn btn-sm btn-light"
+        onClick={() => setDate(today())}
+      >
+        Today
+      </button>
+      <button
+        onClick={() => setDate(next(date))}
         className="btn btn-sm btn-light"
       >
         Next Day
-      </Link>
+      </button>
       <br />
-      {/* <label htmlFor="reservation_date" className="form-label m-3">
+      <label htmlFor="reservation_date" className="form-label m-3">
         <input
           type="date"
           pattern="\d{4}-\d{2}-\d{2}"
@@ -66,18 +84,27 @@ function Dashboard() {
           onChange={handleDateChange}
           value={date}
         />
-      </label> */}
-      <div className="d-md-flex mb-3 "></div>
+      </label>
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />
-      <h3>Tables </h3>
+      {/* <h3>Tables </h3>
       <div className="d-flex justify-content-center mb-1 flex-wrap">
         <TablesList tables={tables} />
-      </div>
+      </div> */}
+      {tables.length ? (
+        <div>
+          <h3>Tables</h3>
+          <div className="d-flex justify-content-center mb-1 flex-wrap">
+            <TablesList tables={tables} />
+          </div>
+        </div>
+      ) : (
+        <h5>Loading tables...</h5>
+      )}
       {reservations.length ? (
         <h3>Reservations</h3>
       ) : (
-        `No reservations for ${date}`
+        <h5>No reservations for {date}</h5>
       )}
       <div className="d-flex justify-content-center flex-wrap">
         <ReservationsList reservations={reservations} />

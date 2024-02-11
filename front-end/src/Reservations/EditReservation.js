@@ -71,14 +71,19 @@ function EditReservation() {
   if (currentReservation.reservation_id) {
     return (
       <div className="pb-4">
-        <h1>Edit Reservation</h1>
-        <ReservationForm
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          handleCancel={handleCancel}
-          formData={formData}
-        />
-        <ErrorAlert error={error} />
+        <div>
+          <h1>Edit Reservation</h1>
+          <ErrorAlert error={error} />
+        </div>
+
+        <div>
+          <ReservationForm
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            handleCancel={handleCancel}
+            formData={formData}
+          />
+        </div>
       </div>
     );
   } else {

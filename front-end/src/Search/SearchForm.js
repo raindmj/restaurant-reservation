@@ -2,10 +2,13 @@ import React from "react";
 
 function SearchForm({ handleSearch, handleChange, mobile_number }) {
   return (
-    <form onSubmit={handleSearch}>
-      <div className="form-group">
-        <label htmlFor="mobile_number">Mobile Number:</label>
+    <form onSubmit={handleSearch} className="row">
+      <div className="col-auto align-self-center">
+        <label htmlFor="mobile_number" className="form-label mr-2">
+          Mobile Number:
+        </label>
         <input
+          style={{ width: 250 }}
           id="mobile_number"
           name="mobile_number"
           type="text"
@@ -16,9 +19,11 @@ function SearchForm({ handleSearch, handleChange, mobile_number }) {
           onChange={handleChange}
         />
       </div>
-      <button type="submit" className="btn btn-primary">
-        Find
-      </button>
+      <div className="col-auto align-self-center">
+        <button type="submit" className="btn btn-primary">
+          Find
+        </button>
+      </div>
     </form>
   );
 }
