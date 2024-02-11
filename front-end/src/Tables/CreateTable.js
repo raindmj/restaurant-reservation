@@ -14,13 +14,11 @@ function CreateTable() {
   const [formData, setFormData] = useState({ ...initialFormDate });
   const [error, setError] = useState(null);
 
-  // TODO: capacity always string
   function handleChange(event) {
     event.preventDefault();
 
     if (event.target.name === "capacity") {
       const capacityValue = Number(event.target.value);
-      console.log("capacity value:", typeof capacityValue);
 
       setFormData({
         ...formData,

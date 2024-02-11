@@ -1,7 +1,7 @@
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
-//TODO: mobile number must be numbers and not letters
+
 /*
  * Validation middleware
  */
@@ -84,9 +84,6 @@ function isValidPeople(req, res, next) {
 // check if inputted reservation_date matches given format
 function isValidDate(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
-
-  /* const regex2 =
-    /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/; */
 
   const dateFormatRegex =
     /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
@@ -171,11 +168,28 @@ function isValidTime(req, res, next) {
   next();
 }
 
+// check if mobile number only accepts numbers and some characters
+function isValidMobileNumber(req, res, next) {
+  const regexGetOnlyNumbers = /^(?=.*[0-9])[- +()0-9]+$/;
+
+  const { mobile_number } = req.body.data;
+
+  if (!regexGetOnlyNumbers.test(mobile_number)) {
+    next({
+      status: 400,
+      message: "Invalid mobile number.",
+    });
+  }
+
+  next();
+}
+
 // define the valid statuses
 const VALID_STATUSES = ["booked", "seated", "finished", "cancelled"];
 
-// check if:
-// 1. inputted status
+// check if inputted status:
+// 1. is only one listed in valid status array
+// 2: is "finished", then cannot be updated
 function isValidStatus(req, res, next) {
   const inputtedStatus = req.body.data.status;
   const currentStatus = res.locals.reservation.status;
@@ -210,20 +224,6 @@ function hasBookedStatus(req, res, next) {
   next();
 }
 
-/* function todaysDate() {
-  const date = new Date();
-
-  const year = date.toLocaleString("default", { year: "numeric" });
-  const month = date.toLocaleString("default", { month: "2-digit" });
-  const day = date.toLocaleString("default", { day: "2-digit" });
-
-  const formattedDate = year + "-" + month + "-" + day;
-
-  return formattedDate;
-}
-
-console.log(todaysDate()); */
-
 /**
  * List handler for reservation resources
  */
@@ -238,7 +238,6 @@ async function list(req, res, next) {
     } else if (mobile_number) {
       const data = await service.search(mobile_number);
       res.json({ data });
-      // TODO: list by today's date? or list all?
     } else {
       const data = await service.list();
       res.json({ data });
@@ -312,6 +311,7 @@ module.exports = {
   create: [
     hasRequiredProperties,
     hasOnlyValidProperties,
+    isValidMobileNumber,
     isValidPeople,
     isValidDate,
     isDateAndTimeInFuture,
@@ -324,6 +324,7 @@ module.exports = {
     asyncErrorBoundary(reservationExists),
     hasRequiredProperties,
     hasOnlyValidProperties,
+    isValidMobileNumber,
     isValidPeople,
     isValidDate,
     isDateAndTimeInFuture,

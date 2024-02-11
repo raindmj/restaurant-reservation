@@ -9,7 +9,6 @@ function EditReservation() {
   const [error, setError] = useState(null);
 
   const params = useParams();
-  //   console.log(params);
   const reservation_id = params.reservation_id;
 
   useEffect(() => {
@@ -31,7 +30,6 @@ function EditReservation() {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  // console.log(formData)
 
   function handleChange(event) {
     event.preventDefault();

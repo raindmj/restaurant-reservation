@@ -121,7 +121,6 @@ function canMakeReservationAtTable(req, res, next) {
 
 function tableIsNotOccupied(req, res, next) {
   const { reservation_id, table_id } = res.locals.table;
-  console.log("reservation id", reservation_id);
 
   if (!reservation_id) {
     next({
@@ -133,8 +132,8 @@ function tableIsNotOccupied(req, res, next) {
   next();
 }
 
-// TODO: rename maybe
-async function readReservationAfterRemovingIdFromTable(req, res, next) {
+// get the reservation of the reservation id that is assigned to the table
+async function readReservationBeforeRemovingIdFromTable(req, res, next) {
   const { reservation_id } = res.locals.table;
   const reservation = await reservationsService.read(reservation_id);
   if (reservation) {
@@ -249,7 +248,7 @@ module.exports = {
   delete: [
     asyncErrorBoundary(tableExists),
     tableIsNotOccupied,
-    asyncErrorBoundary(readReservationAfterRemovingIdFromTable),
+    asyncErrorBoundary(readReservationBeforeRemovingIdFromTable),
     asyncErrorBoundary(destroy),
   ],
 };

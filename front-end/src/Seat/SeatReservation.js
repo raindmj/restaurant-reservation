@@ -14,7 +14,6 @@ function SeatReservation() {
 
   const history = useHistory();
   const { reservation_id } = useParams();
-  console.log(formData);
 
   useEffect(() => {
     async function loadDashboard() {

@@ -49,7 +49,7 @@ function ReservationForm({
           placeholder="000-000-0000"
           required={true}
           value={formData.mobile_number}
-          maxLength="100"
+          maxLength="12"
           onChange={handleChange}
         />
       </div>
@@ -66,7 +66,6 @@ function ReservationForm({
           pattern="\d{4}-\d{2}-\d{2}"
           required={true}
           value={formData.reservation_date}
-          maxLength="100"
           onChange={handleChange}
         />
       </div>
@@ -83,7 +82,6 @@ function ReservationForm({
           pattern="[0-9]{2}:[0-9]{2}"
           required={true}
           value={formData.reservation_time}
-          maxLength="100"
           onChange={handleChange}
         />
       </div>
