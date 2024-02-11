@@ -65,12 +65,15 @@ function CreateReservation() {
 
   return (
     <div>
-      <div>
+      <div className="pt-3 px-2">
         <h1>Create a New Reservation</h1>
-        <ErrorAlert error={error} />
       </div>
 
-      <div className="">
+      <hr className="bg-dark"></hr>
+
+      <ErrorAlert error={error} />
+
+      <div>
         <ReservationForm
           handleChange={handleChange}
           handleSubmit={handleSubmit}

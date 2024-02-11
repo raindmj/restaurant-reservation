@@ -7,7 +7,7 @@ function ReservationForm({
   formData,
 }) {
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="pb-3 pt-2 px-2">
       <div className="form-group">
         <label htmlFor="first_name" className="form-label mr-2">
           First Name:

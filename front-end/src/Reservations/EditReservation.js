@@ -70,11 +70,13 @@ function EditReservation() {
 
   if (currentReservation.reservation_id) {
     return (
-      <div className="pb-4">
+      <div className="pt-3 px-2">
         <div>
           <h1>Edit Reservation</h1>
-          <ErrorAlert error={error} />
+          <hr className="bg-dark"></hr>
         </div>
+
+        <ErrorAlert error={error} />
 
         <div>
           <ReservationForm

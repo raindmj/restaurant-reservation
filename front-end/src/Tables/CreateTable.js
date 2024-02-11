@@ -60,17 +60,22 @@ function CreateTable() {
 
   return (
     <div>
-      <div>
+      <div className="pt-3 px-2">
         <h1>Create a New Table</h1>
-        <ErrorAlert error={error} />
       </div>
 
-      <TableForm
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-        handleCancel={handleCancel}
-        formData={formData}
-      />
+      <hr className="bg-dark"></hr>
+
+      <ErrorAlert error={error} />
+
+      <div>
+        <TableForm
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          handleCancel={handleCancel}
+          formData={formData}
+        />
+      </div>
     </div>
   );
 }

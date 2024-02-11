@@ -39,43 +39,30 @@ function Dashboard() {
   return (
     <main className="text-center">
       <h1 className="m-3">{formatDate(date)}</h1>
-      {/* <Link
-        to={`/dashboard?date=${previous(date)}`}
-        className="btn btn-sm btn-light mx-2"
-      >
-        Previous Day
-      </Link>
-      <Link
-        to={`/dashboard?date=${today()}`}
-        className="btn btn-sm btn-light mx-2"
-      >
-        Today
-      </Link>
-      <Link
-        to={`/dashboard?date=${next(date)}`}
-        className="btn btn-sm btn-light mx-2"
-      >
-        Next Day
-      </Link> */}
-      <button
-        onClick={() => setDate(previous(date))}
-        className="btn btn-sm btn-light"
-      >
-        Previous Day
-      </button>
-      <button
-        className="mx-3 btn btn-sm btn-light"
-        onClick={() => setDate(today())}
-      >
-        Today
-      </button>
-      <button
-        onClick={() => setDate(next(date))}
-        className="btn btn-sm btn-light"
-      >
-        Next Day
-      </button>
-      <br />
+
+      <hr className="bg-dark"></hr>
+
+      <div>
+        <button
+          onClick={() => setDate(previous(date))}
+          className="btn btn-sm btn-light"
+        >
+          Previous Day
+        </button>
+        <button
+          className="mx-3 btn btn-sm btn-light"
+          onClick={() => setDate(today())}
+        >
+          Today
+        </button>
+        <button
+          onClick={() => setDate(next(date))}
+          className="btn btn-sm btn-light"
+        >
+          Next Day
+        </button>
+      </div>
+
       <label htmlFor="reservation_date" className="form-label m-3">
         <input
           type="date"
@@ -85,29 +72,32 @@ function Dashboard() {
           value={date}
         />
       </label>
+
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />
-      {/* <h3>Tables </h3>
-      <div className="d-flex justify-content-center mb-1 flex-wrap">
-        <TablesList tables={tables} />
-      </div> */}
-      {tables.length ? (
-        <div>
-          <h3>Tables</h3>
-          <div className="d-flex justify-content-center mb-1 flex-wrap">
-            <TablesList tables={tables} />
+
+      <div className="mb-4 p-3">
+        <h3>Tables</h3>
+        {tables.length ? (
+          <div>
+            <div className="d-flex justify-content-center mb-1 flex-wrap">
+              <TablesList tables={tables} />
+            </div>
           </div>
-        </div>
-      ) : (
-        <h5>Loading tables...</h5>
-      )}
-      {reservations.length ? (
+        ) : (
+          <h5>Loading tables...</h5>
+        )}
+      </div>
+
+      <div className="mb-4 p-3">
         <h3>Reservations</h3>
-      ) : (
-        <h5>No reservations for {date}</h5>
-      )}
-      <div className="d-flex justify-content-center flex-wrap">
-        <ReservationsList reservations={reservations} />
+        {reservations.length ? (
+          <div className="d-flex justify-content-center flex-wrap">
+            <ReservationsList reservations={reservations} />
+          </div>
+        ) : (
+          <h5>No reservations for {date}</h5>
+        )}
       </div>
     </main>
   );

@@ -2,7 +2,7 @@ import React from "react";
 
 function SearchForm({ handleSearch, handleChange, mobile_number }) {
   return (
-    <form onSubmit={handleSearch} className="row">
+    <form onSubmit={handleSearch} className="row pb-3 pt-2 px-2">
       <div className="col-auto align-self-center">
         <label htmlFor="mobile_number" className="form-label mr-2">
           Mobile Number:

@@ -36,15 +36,23 @@ function SearchByMobileNumber() {
 
   return (
     <div>
-      <h1>Search for Reservation(s)</h1>
-      <SearchForm
-        handleSearch={handleSearch}
-        handleChange={handleChange}
-        mobile_number={mobileNumber}
-      />
+      <div className="row justify-content-center pt-3 px-2">
+        <h1 className="mb-0">Search for Reservation(s)</h1>
+      </div>
+
+      <hr className="bg-dark"></hr>
+
+      <div className="row justify-content-center">
+        <SearchForm
+          handleSearch={handleSearch}
+          handleChange={handleChange}
+          mobile_number={mobileNumber}
+        />
+      </div>
+
       {reservations.length ? (
         <div>
-          <h3 className="mt-2">Reservations</h3>
+          <h3 className="mt-2 row justify-content-center">Reservations</h3>
           <ReservationsList reservations={reservations} />
         </div>
       ) : (
