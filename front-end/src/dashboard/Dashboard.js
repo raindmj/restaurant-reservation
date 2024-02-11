@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import ReservationsList from "../Reservations/ReservationsList";
 import TablesList from "../Tables/TablesList";
 import ErrorAlert from "../layout/ErrorAlert";
@@ -14,17 +15,13 @@ import useQuery from "../utils/useQuery";
  */
 function Dashboard() {
   const query = useQuery();
+  const date = query.get("date") || today();
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
-  const [date, setDate] = useState(query.get("date") || today());
 
   useEffect(loadDashboard, [date]);
-
-  function handleDateChange(event) {
-    setDate(event.target.value);
-  }
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -39,26 +36,29 @@ function Dashboard() {
   return (
     <main className="text-center">
       <h1 className="m-3">{formatDate(date)}</h1>
-      <button
-        onClick={() => setDate(previous(date))}
+      <Link
+        to={`/dashboard?date=${previous(date)}`}
+        // onClick={() => setDate(previous(date))}
         className="btn btn-sm btn-light"
       >
         Previous Day
-      </button>
-      <button
-        className="mx-3 btn btn-sm btn-light"
-        onClick={() => setDate(today())}
+      </Link>
+      <Link
+        to={`/dashboard?date=${today()}`}
+        // onClick={() => setDate(previous(date))}
+        className="btn btn-sm btn-light"
       >
         Today
-      </button>
-      <button
-        onClick={() => setDate(next(date))}
+      </Link>
+      <Link
+        to={`/dashboard?date=${next(date)}`}
+        // onClick={() => setDate(previous(date))}
         className="btn btn-sm btn-light"
       >
         Next Day
-      </button>
+      </Link>
       <br />
-      <label htmlFor="reservation_date" className="form-label m-3">
+      {/* <label htmlFor="reservation_date" className="form-label m-3">
         <input
           type="date"
           pattern="\d{4}-\d{2}-\d{2}"
@@ -66,7 +66,7 @@ function Dashboard() {
           onChange={handleDateChange}
           value={date}
         />
-      </label>
+      </label> */}
       <div className="d-md-flex mb-3 "></div>
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />

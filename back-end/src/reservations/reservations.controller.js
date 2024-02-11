@@ -1,7 +1,7 @@
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
-
+//TODO: mobile number must be numbers and not letters
 /*
  * Validation middleware
  */
