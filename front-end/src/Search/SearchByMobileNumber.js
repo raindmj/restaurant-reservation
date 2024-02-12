@@ -19,15 +19,22 @@ function SearchByMobileNumber() {
     const abortController = new AbortController();
 
     try {
-      const data = await listReservations(
-        { mobile_number: mobileNumber },
-        abortController.signal
-      );
+      const regexGetOnlyNumbers = /^(?=.*[0-9])[- +()0-9]+$/;
 
-      setReservations(data);
+      if (!regexGetOnlyNumbers.test(mobileNumber)) {
+        setReservationsError({ message: "Invalid mobile number." });
+        setReservations([]);
+      } else {
+        const data = await listReservations(
+          { mobile_number: mobileNumber },
+          abortController.signal
+        );
 
-      if (!reservations.length) {
-        setReservationsError({ message: "No reservations found" });
+        setReservations(data);
+
+        if (!reservations.length) {
+          setReservationsError({ message: "No reservations found" });
+        }
       }
     } catch (error) {
       setReservationsError(error);
