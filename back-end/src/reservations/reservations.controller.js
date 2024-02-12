@@ -169,12 +169,27 @@ function isValidTime(req, res, next) {
 }
 
 // check if mobile number only accepts numbers and some characters
-function isValidMobileNumber(req, res, next) {
+function isValidMobileNumberForCreateEditReservation(req, res, next) {
   const regexGetOnlyNumbers = /^(?=.*[0-9])[- +()0-9]+$/;
 
   const { mobile_number } = req.body.data;
 
   if (!regexGetOnlyNumbers.test(mobile_number)) {
+    next({
+      status: 400,
+      message: "Invalid mobile number.",
+    });
+  }
+
+  next();
+}
+
+function isValidMobileNumberForSearch(req, res, next) {
+  const regexGetOnlyNumbers = /^(?=.*[0-9])[- +()0-9]+$/;
+
+  const { mobile_number } = req.query;
+
+  if (mobile_number && !regexGetOnlyNumbers.test(mobile_number)) {
     next({
       status: 400,
       message: "Invalid mobile number.",
@@ -307,11 +322,11 @@ async function updateReservation(req, res, next) {
 }
 
 module.exports = {
-  list: asyncErrorBoundary(list),
+  list: [isValidMobileNumberForSearch, asyncErrorBoundary(list)],
   create: [
     hasRequiredProperties,
     hasOnlyValidProperties,
-    isValidMobileNumber,
+    isValidMobileNumberForCreateEditReservation,
     isValidPeople,
     isValidDate,
     isDateAndTimeInFuture,
@@ -324,7 +339,7 @@ module.exports = {
     asyncErrorBoundary(reservationExists),
     hasRequiredProperties,
     hasOnlyValidProperties,
-    isValidMobileNumber,
+    isValidMobileNumberForCreateEditReservation,
     isValidPeople,
     isValidDate,
     isDateAndTimeInFuture,
