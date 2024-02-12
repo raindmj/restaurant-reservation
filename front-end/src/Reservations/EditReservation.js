@@ -14,13 +14,18 @@ function EditReservation() {
   useEffect(() => {
     async function getReservation() {
       const abortController = new AbortController();
-      const data = await readReservation(
-        reservation_id,
-        abortController.signal
-      );
 
-      setCurrentReservation(data);
-      setFormData(data);
+      try {
+        const data = await readReservation(
+          reservation_id,
+          abortController.signal
+        );
+
+        setCurrentReservation(data);
+        setFormData(data);
+      } catch (error) {
+        setError(error);
+      }
     }
 
     getReservation();
