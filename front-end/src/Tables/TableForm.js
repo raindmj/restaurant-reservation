@@ -35,7 +35,7 @@ function TableForm({ handleSubmit, handleChange, handleCancel, formData }) {
       <button
         type="button"
         onClick={handleCancel}
-        className="btn btn-secondary mr-2"
+        className="btn btn-danger mr-2"
       >
         Cancel
       </button>
