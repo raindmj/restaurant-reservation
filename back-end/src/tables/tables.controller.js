@@ -43,7 +43,8 @@ function hasOnlyValidProperties(req, res, next) {
 
 // check whether table has:
 // 1. table_name that is at least 2 characters long
-// 2. capacity of at least 1 person
+// 2. capacity input that is a number, not string
+// 3. capacity of at least 1 person
 function isValidTable(req, res, next) {
   const { table_name, capacity } = req.body.data;
 
@@ -119,6 +120,7 @@ function canMakeReservationAtTable(req, res, next) {
   next();
 }
 
+// check if table is occupied or not before removing reservation from it
 function tableIsNotOccupied(req, res, next) {
   const { reservation_id, table_id } = res.locals.table;
 
@@ -182,6 +184,9 @@ function read(req, res, next) {
   res.json({ data });
 }
 
+/*
+ * Update a table with new reservation and update the reservation status to "seated"
+ */
 async function update(req, res, next) {
   const { table_id } = res.locals.table;
   const { reservation_id } = res.locals.reservation;
@@ -204,6 +209,9 @@ async function update(req, res, next) {
   }
 }
 
+/*
+ * Remove a reservation from a table and update the reservation status to "finished"
+ */
 async function destroy(req, res, next) {
   const { table_id } = res.locals.table;
   const { reservation_id } = res.locals.reservation;

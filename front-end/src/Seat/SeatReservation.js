@@ -70,7 +70,6 @@ function SeatReservation() {
     setFormData("Please select a table");
     history.goBack();
   }
-  console.log(formData);
 
   return (
     <>

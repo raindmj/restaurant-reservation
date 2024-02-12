@@ -6,6 +6,7 @@ const hasProperties = require("../errors/hasProperties");
  * Validation middleware
  */
 
+// make sure reservation with given reservation id exists/can be found
 async function reservationExists(req, res, next) {
   const { reservation_id } = req.params;
   const reservation = await service.read(reservation_id);
@@ -168,7 +169,7 @@ function isValidTime(req, res, next) {
   next();
 }
 
-// check if mobile number only accepts numbers and some characters
+// check if mobile number input only accepts numbers and some characters when creating and editing reservation
 function isValidMobileNumberForCreateEditReservation(req, res, next) {
   const regexGetOnlyNumbers = /^(?=.*[0-9])[- +()0-9]+$/;
 
@@ -184,6 +185,7 @@ function isValidMobileNumberForCreateEditReservation(req, res, next) {
   next();
 }
 
+// check if mobile number input only accepts numbers and some characters when searching
 function isValidMobileNumberForSearch(req, res, next) {
   const regexGetOnlyNumbers = /^(?=.*[0-9])[- +()0-9]+$/;
 
@@ -226,6 +228,7 @@ function isValidStatus(req, res, next) {
   next();
 }
 
+// check if new reservation or edited reservation has a booked status
 function hasBookedStatus(req, res, next) {
   const { status } = req.body.data;
 
@@ -305,6 +308,9 @@ async function updateStatus(req, res, next) {
   }
 }
 
+/*
+ * Update reservation info
+ */
 async function updateReservation(req, res, next) {
   const { reservation_id } = res.locals.reservation;
 
