@@ -92,13 +92,13 @@ async function reservationExists(req, res, next) {
 // 2. reservation id exists for that table, if it does then it's occupied
 // 3. reservation id is already seated at a table
 function canMakeReservationAtTable(req, res, next) {
-  const { capacity, table_id, reservation_id } = res.locals.table;
+  const { capacity, table_id, reservation_id, table_name } = res.locals.table;
   const { people, status } = res.locals.reservation;
 
   if (capacity < people) {
     next({
       status: 400,
-      message: `Table ${table_id} does not have sufficient capacity for the amount of people in the reservation.`,
+      message: `Table "${table_name}" does not have sufficient capacity for the amount of people in the reservation.`,
     });
   }
 

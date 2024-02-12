@@ -3,13 +3,19 @@ import { removeReservationFromTable } from "../utils/api";
 
 function Table({ table }) {
   async function handleFinish() {
+    const abortController = new AbortController();
+
     if (
       window.confirm(
         "Is this table ready to seat new guests? \n \nThis cannot be undone."
       )
     ) {
       try {
-        await removeReservationFromTable(table.table_id);
+        await removeReservationFromTable(
+          table.table_id,
+          abortController.signal
+        );
+
         window.location.reload();
       } catch (error) {
         console.error(error);

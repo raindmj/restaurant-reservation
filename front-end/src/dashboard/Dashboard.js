@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import ReservationsList from "../Reservations/ReservationsList";
 import TablesList from "../Tables/TablesList";
 import ErrorAlert from "../layout/ErrorAlert";
@@ -43,24 +44,27 @@ function Dashboard() {
       <hr className="bg-dark"></hr>
 
       <div>
-        <button
+        <Link
+          to={`/dashboard?date=${previous(date)}`}
+          className="btn btn-sm btn-light mx-2"
           onClick={() => setDate(previous(date))}
-          className="btn btn-sm btn-light"
         >
           Previous Day
-        </button>
-        <button
-          className="mx-3 btn btn-sm btn-light"
+        </Link>
+        <Link
+          to={`/dashboard?date=${today()}`}
+          className="btn btn-sm btn-light mx-2"
           onClick={() => setDate(today())}
         >
           Today
-        </button>
-        <button
+        </Link>
+        <Link
+          to={`/dashboard?date=${next(date)}`}
+          className="btn btn-sm btn-light mx-2"
           onClick={() => setDate(next(date))}
-          className="btn btn-sm btn-light"
         >
           Next Day
-        </button>
+        </Link>
       </div>
 
       <label htmlFor="reservation_date" className="form-label m-3">

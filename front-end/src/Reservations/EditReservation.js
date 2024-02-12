@@ -13,10 +13,16 @@ function EditReservation() {
 
   useEffect(() => {
     async function getReservation() {
-      const data = await readReservation(reservation_id);
+      const abortController = new AbortController();
+      const data = await readReservation(
+        reservation_id,
+        abortController.signal
+      );
+
       setCurrentReservation(data);
       setFormData(data);
     }
+
     getReservation();
   }, [reservation_id]);
 
@@ -54,8 +60,10 @@ function EditReservation() {
   async function handleSubmit(event) {
     event.preventDefault();
 
+    const abortController = new AbortController();
+
     try {
-      await updateReservation(formData);
+      await updateReservation(formData, abortController.signal);
       history.push(`/dashboard?date=${formData.reservation_date}`);
     } catch (error) {
       setError(error);

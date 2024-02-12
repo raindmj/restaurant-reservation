@@ -1,6 +1,12 @@
 import React from "react";
 
-function SeatForm({ handleSubmit, handleChange, formData, tables }) {
+function SeatForm({
+  handleSubmit,
+  handleChange,
+  handleCancel,
+  formData,
+  tables,
+}) {
   return (
     <form
       action=""
@@ -24,9 +30,20 @@ function SeatForm({ handleSubmit, handleChange, formData, tables }) {
           })}
         </select>
       </label>
-      <button type="submit" className="btn btn-sm btn-primary">
-        Submit
-      </button>
+
+      <div className="row pb-4 pt-2 m-0">
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="btn btn-danger btn-sm mr-2 col"
+        >
+          Cancel
+        </button>
+
+        <button type="submit" className="btn btn-sm btn-primary col">
+          Submit
+        </button>
+      </div>
     </form>
   );
 }

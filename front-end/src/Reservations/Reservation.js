@@ -9,6 +9,8 @@ function Reservation({ reservation }) {
   const phone = formatPhone(reservation.mobile_number);
 
   async function handleCancel() {
+    const abortController = new AbortController();
+
     if (
       window.confirm(
         "Do you want to cancel this reservation? \n \nThis cannot be undone."
@@ -17,7 +19,8 @@ function Reservation({ reservation }) {
       try {
         await updateStatusOfReservation(
           reservation.reservation_id,
-          "cancelled"
+          "cancelled",
+          abortController.signal
         );
         window.location.reload();
       } catch (error) {

@@ -18,29 +18,42 @@ function SeatReservation() {
   useEffect(() => {
     async function loadDashboard() {
       const abortController = new AbortController();
+
       setTablesError(null);
       setReservationError(null);
+
       try {
         const tablesData = await listTables(abortController.signal);
         setTables(tablesData);
 
-        const reservationData = await readReservation(reservation_id);
+        const reservationData = await readReservation(
+          reservation_id,
+          abortController.signal
+        );
+
         setReservation(reservationData);
       } catch (error) {
         setTablesError({ message: error.response.data.error });
         setReservationError({ message: error.response.data.error });
       }
+
       return () => abortController.abort();
     }
+
     loadDashboard();
   }, [reservation_id]);
 
   async function handleSubmit(event) {
     event.preventDefault();
+
+    const abortController = new AbortController();
+
     try {
       if (formData === "Please select a table")
         throw new Error("Please select a valid table");
-      await updateTable(formData, reservation_id);
+
+      await updateTable(formData, reservation_id, abortController.signal);
+
       history.push("/dashboard");
     } catch (error) {
       if (error.response)
@@ -57,6 +70,7 @@ function SeatReservation() {
     setFormData("Please select a table");
     history.goBack();
   }
+  console.log(formData);
 
   return (
     <>
@@ -65,17 +79,14 @@ function SeatReservation() {
           handleChange={handleChange}
           handleCancel={handleCancel}
           handleSubmit={handleSubmit}
+          formData={formData}
           tables={tables}
         />
-        <button
-          onClick={handleCancel}
-          className="mb-5 mt-2 btn btn-sm btn-danger"
-        >
-          Cancel
-        </button>
+
         {reservation.reservation_time && (
           <Reservation reservation={reservation} />
         )}
+
         <ErrorAlert error={tablesError} />
         <ErrorAlert error={reservationError} />
       </div>

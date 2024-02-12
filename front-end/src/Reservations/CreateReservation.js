@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { createReservation } from "../utils/api";
+import { formatAsDate } from "../utils/date-time";
 import ReservationForm from "./ReservationForm";
 
 function CreateReservation() {
@@ -50,8 +51,12 @@ function CreateReservation() {
         formData,
         abortController.signal
       );
+
+      // reformat to be YYYY-MM-DD format
+      const formattedNewDate = formatAsDate(newReservation.reservation_date);
+
       // redirect user to the dashboard page that matches the date of the new reservation
-      history.push(`/dashboard?date=${newReservation.reservation_date}`);
+      history.push(`/dashboard?date=${formattedNewDate}`);
     } catch (error) {
       setError(error);
     }
